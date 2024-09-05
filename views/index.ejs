@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>JSON Table</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">JSON Table</h2>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Bleu</th>
+                <th>Rouge</th>
+                <th>llm</th>
+                <th>CIDEr</th>
+                <th>Captions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 0; i < paginatedData.Bleu.length; i++) { %>
+                <tr>
+                    <td><%= paginatedData.Bleu[i] %></td>
+                    <td><%= paginatedData.Rouge[i] %></td>
+                    <td><%= paginatedData.llm[i] %></td>
+                    <td><%= paginatedData.CIDEr[i] %></td>
+                    <td>
+                        <strong>gt:</strong> <%= paginatedData.gt[i] %><br>
+                        <strong>pred:</strong> <%= paginatedData.pred[i] %>
+                    </td>
+                    <td>
+                        <form action="/save" method="POST">
+                            <input type="hidden" name="index" value="<%= i + ((page - 1) * 5) %>">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <% if (page > 1) { %>
+                <li class="page-item"><a class="page-link" href="/?page=<%= page - 1 %>">Previous</a></li>
+            <% } %>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <% if (i === page) { %>active<% } %>">
+                    <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+            <% if (page < totalPages) { %>
+                <li class="page-item"><a class="page-link" href="/?page=<%= page + 1 %>">Next</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <a href="/saved" class="btn btn-secondary mt-4">View Saved Rows</a>
+</div>
+</body>
+</html>
